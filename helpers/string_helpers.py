@@ -33,7 +33,7 @@ def removeFileExtension(fileName):
 
 def append0IfLessThan10(number):
     number2 = int(number)
-    return f"0{number2}" if number2 < 10 else number2
+    return f"0{str(number2)}" if number2 < 10 else number2
 
 def getSeasonNumber(number):
     regex = re.search('.*?([0-9]+).*', number)
