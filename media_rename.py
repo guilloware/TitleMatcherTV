@@ -79,9 +79,10 @@ def renameSeasonFolders(folderDir, parentPath, pathDir):
     for folder in dir[1:]:
         if string_helpers.hasNumber(folder):
             folderName = Path(folder)
-            newFolderName = string_helpers.getSeasonNumber(folder)
-            oldPath = os.path.join(pathDir, folderName)
-            newPath = os.path.join(pathDir, parentPath, newFolderName)
+            baseFolderName = os.path.basename(Path(folderName))
+            newFolderName = string_helpers.getSeasonNumber(baseFolderName)
+            oldPath = os.path.join(folderName)
+            newPath = os.path.join(parentPath, newFolderName)
             print(f"--WHAT I GOT--\n-> {oldPath}\n-> {newPath}")
 
             if oldPath == newPath:
