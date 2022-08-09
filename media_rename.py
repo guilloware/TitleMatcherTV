@@ -1,7 +1,8 @@
 import os
+from re import X
 import sys
 import api
-from domain.title import Title
+from domain.title import EpisodeTitle, SeriesTitle
 import helpers.string_helpers as string_helpers
 from pathlib import Path
 
@@ -15,11 +16,11 @@ def promptContinue():
 			os._exit()
 		else:
 			print("Enter [y] or [n]")
-    
-def renameMedia(fileName, pathDir):
+
+def renameEpisode(fileName, pathDir):
     print(f"-- Processing [{fileName}]")
 
-    extension = string_helpers.getFileExtension(fileName) 
+    extension = string_helpers.getFileExtension(fileName)
     text = string_helpers.removeFileExtension(fileName)
     print(text)
     api_result = api.searchEpisode(text)
@@ -27,7 +28,7 @@ def renameMedia(fileName, pathDir):
     results = api_result
 
     for t in results:
-        title = Title(t['id'], t['title'], t['description'], fileName, extension)
+        title = EpisodeTitle(t['id'], t['title'], t['description'], fileName, extension)
         print('-- Found Match --')
         print(f"-> {fileName}")
         print(f"-> {title.plex_title}")
@@ -45,6 +46,53 @@ def renameMedia(fileName, pathDir):
         else:
             print("Enter [y] or [n]")
 
+def renameSeries(fileName, pathDir):
+    searchText = os.path.basename(os.path.dirname(fileName))
+    print(f"-- Processing [{fileName}]")
+    api_result = api.searchSeries(searchText)
+    results = api_result
+
+    for t in results:
+        print(t)
+        title = SeriesTitle(t['id'], t['title'], t['description'])
+        print('-- Found Match --')
+        print(f"-> {searchText}")
+        print(f"-> {title.plex_title}")
+
+        choice = input("Rename? [y,n]\n")
+
+        if(choice == "y"):
+            oldPath = os.path.join(pathDir, searchText)
+            newPath = os.path.join(pathDir, title.plex_title)
+            os.rename(oldPath, newPath)
+            print(f"--Renamed--\n-> {oldPath}\n-> {newPath}")
+            os._exit(1)
+        elif(choice == "n"):
+            print("...")
+        else:
+            print("Enter [y] or [n]")
+
+def renameSeasonFolders(folderDir, parentPath, pathDir):
+    os.walk(folderDir)
+    dir = [x[0] for x in os.walk(folderDir)]
+
+    for folder in dir[1:]:
+        if string_helpers.hasNumber(folder):
+            folderName = Path(folder)
+            newFolderName = string_helpers.getSeasonNumber(folder)
+            oldPath = os.path.join(pathDir, folderName)
+            newPath = os.path.join(pathDir, parentPath, newFolderName)
+            print(f"--WHAT I GOT--\n-> {oldPath}\n-> {newPath}")
+
+            if oldPath == newPath:
+                print("--Folder Name Already Valid--")
+            else:
+                os.rename(oldPath, newPath)
+                print(f"--Renamed--\n-> {oldPath}\n-> {newPath}")
+        else:
+            print("No season folders found skipping...")
+    os._exit(1)
+
 type = sys.argv[1]
 fileName = sys.argv[2]
 
@@ -55,15 +103,16 @@ if os.path.exists(fileName) != True:
 path = Path(fileName)
 pathDir = path.parent.absolute()
 
-if type != "episode" and type != "series":
+if type != "episode" and type != "series" and type != "season":
 	print("Please enter arg to as episode or series")
 	os._exit(1)
 
-mediaName = fileName
-
 if type == "episode":
     mediaName = os.path.basename(path)
+    renameEpisode(mediaName, pathDir)
+elif type == "season":
+    renameSeasonFolders(fileName, path, pathDir)
+elif type == "series":
+    renameSeries(fileName, pathDir)
 
-renameMedia(mediaName, pathDir)
-
-print(f"Unable to match: {mediaName}")
+print(f"Unable to match: {fileName}")

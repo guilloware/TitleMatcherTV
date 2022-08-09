@@ -14,4 +14,5 @@ def searchEpisode(text):
 	return search(url)
 
 def searchSeries(text):
-	raise Exception("Not yet implemented")
+	url = f"https://imdb-api.com/en/API/SearchSeries/{api_key}/{text}"
+	return search(url)

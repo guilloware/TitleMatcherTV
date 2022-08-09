@@ -21,6 +21,7 @@ def getEpisodeCodeFromDescription(desc):
     return episode_code
 
 def getSeriesTitleFromDescription(desc):
+    print(desc)
     regex = re.search('[0-9]+ - (.*) \([0-9]+\)', desc)
     return regex.group(1)
 
@@ -31,4 +32,16 @@ def removeFileExtension(fileName):
     return fileName.rsplit(".", 1)[0]
 
 def append0IfLessThan10(number):
-    return f"0{number}" if int(number) < 10 else number
+    number2 = int(number)
+    return f"0{number2}" if number2 < 10 else number2
+
+def getSeasonNumber(number):
+    regex = re.search('.*?([0-9]+).*', number)
+    print(regex)
+    number = (regex.group(1))
+    
+    return "Season " + append0IfLessThan10(number)
+
+def hasNumber(text):
+    matches = re.findall('\d+', text)
+    return len(matches) > 0

@@ -22,3 +22,18 @@ os.mkdir(path)
 media = "A Streetcar Named Marge.mp4"
 mediaPath = os.path.join(parent_dir, media)
 f = open(mediaPath, "x")
+
+# Create Test Dir
+directory = "Season 02"
+path = os.path.join(parent_dir, directory)
+os.mkdir(path)
+
+# Create Test Dir
+directory = "The Simpsons - Season 6"
+path = os.path.join(parent_dir, directory)
+os.mkdir(path)
+
+# Create Test Dir
+directory = "Simpson 1"
+path = os.path.join(parent_dir, directory)
+os.mkdir(path)
