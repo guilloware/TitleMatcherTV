@@ -9,8 +9,10 @@ def search(url):
 	results = response.json()["results"]
 	return results
 
-def searchEpisode(file_name):
+def searchEpisode(file_name, query):
 	search_methods = []
+	if query is not None:
+		search_methods.append(query)
 	search_methods.append(file_name)
 	try: 
 		search_methods.append(file_name.split(']')[1])
@@ -25,6 +27,10 @@ def searchEpisode(file_name):
 			matches += results
 	return matches
 
-def searchSeries(text):
+def searchSeries(text, query):
+	search_methods = []
+	if query is not None:
+		search_methods.append(query)
+	search_methods.append(text)
 	url = f"https://imdb-api.com/en/API/SearchSeries/{api_key}/{text}"
 	return search(url)

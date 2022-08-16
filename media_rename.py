@@ -17,13 +17,13 @@ def promptContinue():
 		else:
 			print("Enter [y] or [n]")
 
-def renameEpisode(fileName, pathDir):
+def renameEpisode(fileName, pathDir, query):
     print(f"-- Processing [{fileName}]")
 
     extension = string_helpers.getFileExtension(fileName)
     text = string_helpers.removeFileExtension(fileName)
     print(text)
-    api_result = api.searchEpisode(text)
+    api_result = api.searchEpisode(text, query)
 
     results = api_result
 
@@ -46,10 +46,10 @@ def renameEpisode(fileName, pathDir):
         else:
             print("Enter [y] or [n]")
 
-def renameSeries(fileName, pathDir):
+def renameSeries(fileName, pathDir, query):
     searchText = os.path.basename(os.path.dirname(fileName))
     print(f"-- Processing [{fileName}]")
-    api_result = api.searchSeries(searchText)
+    api_result = api.searchSeries(searchText, query)
     results = api_result
 
     for t in results:
@@ -72,7 +72,7 @@ def renameSeries(fileName, pathDir):
         else:
             print("Enter [y] or [n]")
 
-def renameSeasonFolders(folderDir, parentPath, pathDir):
+def renameSeasonFolders(folderDir, parentPath):
     os.walk(folderDir)
     dir = [x[0] for x in os.walk(folderDir)]
 
@@ -96,6 +96,7 @@ def renameSeasonFolders(folderDir, parentPath, pathDir):
 
 type = sys.argv[1]
 fileName = sys.argv[2]
+query = sys.argv[3]
 
 if os.path.exists(fileName) != True:
 	print("Path not valid")
@@ -110,10 +111,10 @@ if type != "episode" and type != "series" and type != "season":
 
 if type == "episode":
     mediaName = os.path.basename(path)
-    renameEpisode(mediaName, pathDir)
+    renameEpisode(mediaName, pathDir, query)
 elif type == "season":
-    renameSeasonFolders(fileName, path, pathDir)
+    renameSeasonFolders(fileName, path, pathDir, query)
 elif type == "series":
-    renameSeries(fileName, pathDir)
+    renameSeries(fileName, pathDir, query)
 
 print(f"Unable to match: {fileName}")
