@@ -8,21 +8,25 @@ def getYearFromDescription(desc):
 
 def getEpisodeCodeFromDescription(desc):
     regex = re.search('-(.*)-', desc)
-    numbers = (regex.group(1)).split(" | ")
-    
-    season_number_regex= re.search('[0-9]+', numbers[0])
-    season_number = append0IfLessThan10(season_number_regex.group(0))
+    try:
+        numbers = (regex.group(1)).split(" | ")
+        
+        season_number_regex= re.search('[0-9]+', numbers[0])
+        season_number = append0IfLessThan10(season_number_regex.group(0))
 
-    episode_number_regex = re.search('[0-9]+', numbers[1])
-    episode_number = append0IfLessThan10(episode_number_regex.group(0))
+        episode_number_regex = re.search('[0-9]+', numbers[1])
+        episode_number = append0IfLessThan10(episode_number_regex.group(0))
 
-    episode_code = f"s{season_number}e{episode_number}"
+        episode_code = f"s{season_number}e{episode_number}"
 
-    return episode_code
+        return episode_code
+    except:
+        return ""
 
 def getSeriesTitleFromDescription(desc):
-    print(desc)
-    regex = re.search('[0-9]+ - (.*) \([0-9]+\)', desc)
+    print("desc: " + desc)
+    regex = None
+    regex = re.search('- (.*) \([0-9]+\)', desc)
     return regex.group(1)
 
 def getFileExtension(fileName):

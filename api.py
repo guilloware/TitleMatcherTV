@@ -17,11 +17,13 @@ def searchEpisode(file_name):
 	except:
 		print("-search method warning-")
 
+	matches = []
 	for text in search_methods:
 		url = f"https://imdb-api.com/en/API/SearchEpisode/{api_key}/{text}"
 		results =  search(url)
 		if len(results) > 0:
-			return results		
+			matches += results
+	return matches
 
 def searchSeries(text):
 	url = f"https://imdb-api.com/en/API/SearchSeries/{api_key}/{text}"
