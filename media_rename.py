@@ -96,7 +96,7 @@ def renameSeasonFolders(folderDir, parentPath):
 
 type = sys.argv[1]
 fileName = sys.argv[2]
-query = sys.argv[3]
+query = sys.argv[3] if len(sys.argv) > 3 else None
 
 if os.path.exists(fileName) != True:
 	print("Path not valid")
