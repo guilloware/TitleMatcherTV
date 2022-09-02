@@ -120,7 +120,7 @@ if type == "episodes":
         choice = input("Search? [y,n]\n")
 
         if(choice == "y"):
-            mediaName = os.path.basename(file)
+            mediaName = os.path.basename(os.path.join(path,file))
             renameEpisode(mediaName, pathDir, query, False)
         elif(choice == "n"):
             print("...")
