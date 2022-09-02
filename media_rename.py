@@ -42,6 +42,8 @@ def renameEpisode(fileName, pathDir, query, exitAfterRename):
             print(f"--Renamed--\n-> {oldPath}\n-> {newPath}")
             if exitAfterRename:
                 os._exit(1)
+            else:
+                break
         elif(choice == "n"):
             print("...")
         else:
