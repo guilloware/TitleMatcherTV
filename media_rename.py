@@ -17,7 +17,7 @@ def promptContinue():
 		else:
 			print("Enter [y] or [n]")
 
-def renameEpisode(fileName, pathDir, query):
+def renameEpisode(fileName, pathDir, query, exitAfterRename):
     print(f"-- Processing [{fileName}]")
 
     extension = string_helpers.getFileExtension(fileName)
@@ -40,7 +40,8 @@ def renameEpisode(fileName, pathDir, query):
             newPath = os.path.join(pathDir, title.plex_title)
             os.rename(oldPath, newPath)
             print(f"--Renamed--\n-> {oldPath}\n-> {newPath}")
-            os._exit(1)
+            if exitAfterRename:
+                os._exit(1)
         elif(choice == "n"):
             print("...")
         else:
@@ -73,7 +74,7 @@ def renameSeries(fileName, pathDir, query):
             print("Enter [y] or [n]")
 
 def renameSeasonFolders(folderDir, parentPath):
-    os.walk(folderDir)
+    os.walk(folderDir) # Is this needed?
     dir = [x[0] for x in os.walk(folderDir)]
 
     for folder in dir[1:]:
@@ -105,13 +106,26 @@ if os.path.exists(fileName) != True:
 path = Path(fileName)
 pathDir = path.parent.absolute()
 
-if type != "episode" and type != "series" and type != "season":
-	print("Please enter arg to as episode or series")
+if type != "episode" and type != "series" and type != "season" and type != "episodes":
+	print("Please enter arg to as episode, series, season or episodes")
 	os._exit(1)
 
 if type == "episode":
     mediaName = os.path.basename(path)
-    renameEpisode(mediaName, pathDir, query)
+    renameEpisode(mediaName, pathDir, query, True)
+if type == "episodes":
+    onlyfiles = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    for file in onlyfiles:
+        print(f"-> {file}")
+        choice = input("Search? [y,n]\n")
+
+        if(choice == "y"):
+            renameEpisode(file, pathDir, query, False)
+        elif(choice == "n"):
+            print("...")
+        else:
+            print("Enter [y] or [n]")
+    os._exit()  
 elif type == "season":
     renameSeasonFolders(fileName, path, pathDir, query)
 elif type == "series":
