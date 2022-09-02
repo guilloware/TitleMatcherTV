@@ -121,7 +121,7 @@ if type == "episodes":
 
         if(choice == "y"):
             mediaName = os.path.basename(file)
-            renameEpisode(mediaName, os.path.join(pathDir, path), query, False)
+            renameEpisode(mediaName, fileName, query, False)
         elif(choice == "n"):
             print("...")
         else:
